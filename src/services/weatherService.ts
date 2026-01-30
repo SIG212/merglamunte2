@@ -23,6 +23,8 @@ export interface WeatherData {
     };
     humidity: number;         // Average relative humidity (08-20)
     condition: string;
+    sunrise: string;
+    sunset: string;
     avalancheRisk?: {
         level: number;
         text: string;
@@ -66,7 +68,7 @@ export const weatherService = {
 
         // Fetch Weather and Avalanche data in parallel
         const [weatherRes, avalancheRes] = await Promise.all([
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&elevation=${altitude}&daily=uv_index_max&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall,snow_depth,visibility,weather_code,wind_speed_80m,windgusts_10m,relative_humidity_2m,precipitation_probability,precipitation&timezone=Europe/Bucharest&windspeed_unit=kmh&precipitation_unit=mm&forecast_days=16`),
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&elevation=${altitude}&daily=uv_index_max,sunrise,sunset&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall,snow_depth,visibility,weather_code,wind_speed_80m,windgusts_10m,relative_humidity_2m,precipitation_probability,precipitation&timezone=Europe/Bucharest&windspeed_unit=kmh&precipitation_unit=mm&forecast_days=16`),
             fetch(AVALANCHE_DATA_URL).catch(() => null)
         ]);
 
@@ -101,6 +103,12 @@ export const weatherService = {
         const dayIndex = dailyTime.findIndex((t: string) => t === date);
         const idxDaily = dayIndex !== -1 ? dayIndex : 0;
         const uvIndex = weatherData.daily?.uv_index_max?.[idxDaily] || 0;
+
+        // Sunrise/Sunset parsing
+        const sunriseISO = weatherData.daily?.sunrise?.[idxDaily];
+        const sunsetISO = weatherData.daily?.sunset?.[idxDaily];
+        const formatTime = (iso: string) => iso ? iso.split('T')[1] : '--:--';
+
 
         // 2. Hourly Data Parsing
         const hourlyTimes = weatherData.hourly.time;
@@ -189,6 +197,8 @@ export const weatherService = {
             },
             humidity: countHumidity > 0 ? Math.round(sumHumidity / countHumidity) : 0,
             condition: totalPrecip > 0 ? (totalSnowfall > totalPrecip / 2 ? 'Snowy' : 'Rainy') : 'Clear/Cloudy',
+            sunrise: formatTime(sunriseISO),
+            sunset: formatTime(sunsetISO),
             avalancheRisk
         };
     }
