@@ -584,6 +584,18 @@ function getVisibilitySnapshotRemark(snapshots: any) {
     return `Evoluție: ${format(snapshots.h08)} la 08:00, ${format(snapshots.h12)} la 12:00, ${format(snapshots.h16)} la 16:00.`;
 }
 
+function getTotalPrecipLevel(mm: number): 'red' | 'yellow' | 'green' {
+    if (mm > 15) return 'red';
+    if (mm > 5) return 'yellow';
+    return 'green';
+}
+
+function getTotalPrecipRemark(mm: number) {
+    if (mm > 15) return "Cantități mari de apă. Risc de viituri/noroi.";
+    if (mm > 5) return "Precipitații moderate acumulate.";
+    return "Precipitații nesemnificative.";
+}
+
 function getUVLevel(index: number): 'red' | 'yellow' | 'green' {
     if (index >= 8) return 'red';
     if (index >= 4) return 'yellow';
