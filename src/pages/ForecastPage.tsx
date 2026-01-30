@@ -320,12 +320,12 @@ export default function ForecastPage() {
                         <section>
                             <div className="glass bg-slate-950/80 border border-white/20 rounded-3xl p-6 shadow-2xl">
                                 <div className="flex items-center space-x-3 mb-5">
-                                    <span className={`material-symbols-outlined ${overallStatus === 'red' ? 'text-red-500' :
+                                    <span className={`material-symbols-outlined ${overallStatus === 'red' ? 'text-red-400' :
                                         overallStatus === 'yellow' ? 'text-amber-300' : 'text-emerald-400'
                                         }`}>
                                         {overallStatus === 'green' ? 'check_circle' : 'warning'}
                                     </span>
-                                    <h2 className={`uppercase text-xs font-extrabold tracking-[0.2em] ${overallStatus === 'red' ? 'text-red-500' :
+                                    <h2 className={`uppercase text-xl font-extrabold tracking-[-0.1em] ${overallStatus === 'red' ? 'text-red-400' :
                                         overallStatus === 'yellow' ? 'text-amber-300' : 'text-emerald-400'
                                         }`}>
                                         {statusText}
@@ -349,7 +349,7 @@ export default function ForecastPage() {
                                     {avalancheInfo && (avalancheInfo.level > 0 || avalancheInfo.isUnknownHighRisk) && (
                                         <div className={`flex items-center space-x-3 pt-2 border-t border-white/10 ${getAvalancheColorClass(avalancheInfo.level, avalancheInfo.isUnknownHighRisk)}`}>
                                             <span className="material-symbols-outlined text-lg">dangerous</span>
-                                            <span className="text-sm font-bold tracking-tight">{avalancheInfo.value}</span>
+                                            <span className="text-sm font-bold tracking-tight">Risc Avalanșă: {avalancheInfo.value}</span>
                                         </div>
                                     )}
                                 </div>
