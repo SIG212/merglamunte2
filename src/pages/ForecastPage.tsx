@@ -288,6 +288,20 @@ export default function ForecastPage() {
                         <span className="opacity-50">|</span>
                         <span>{altitude} m</span>
                     </div>
+
+                    {weather && (
+                        <div className="flex items-center justify-center gap-4 mt-4 text-xs font-medium text-white/70 bg-white/5 inline-flex px-4 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
+                            <div className="flex items-center gap-1.5">
+                                <span className="material-symbols-outlined text-amber-400 text-sm">wb_sunny</span>
+                                <span>{weather.sunrise}</span>
+                            </div>
+                            <div className="w-1 h-1 rounded-full bg-white/20"></div>
+                            <div className="flex items-center gap-1.5">
+                                <span className="material-symbols-outlined text-indigo-300 text-sm">bedtime</span>
+                                <span>{weather.sunset}</span>
+                            </div>
+                        </div>
+                    )}
                 </header>
 
                 {isLoading ? (
