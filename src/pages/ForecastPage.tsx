@@ -112,6 +112,14 @@ export default function ForecastPage() {
             level: getPrecipitationLevel(weather?.maxPrecipHour || 0)
         },
         {
+            id: 'total-precip',
+            label: "Precipitații Totale (08-20)",
+            icon: "rainy",
+            value: `${weather?.precipitation} mm`,
+            remark: getTotalPrecipRemark(weather?.precipitation || 0),
+            level: getTotalPrecipLevel(weather?.precipitation || 0)
+        },
+        {
             id: 'visibility',
             label: "Vizibilitate (08-20)",
             icon: "visibility",
