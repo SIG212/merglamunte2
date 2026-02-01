@@ -147,9 +147,13 @@ export default function ForecastPage() {
             id: 'snow-depth',
             label: "Zăpadă (totală)",
             icon: "ac_unit",
-            value: `${weather?.snowDepth} cm`,
-            remark: getSnowDepthRemark(weather?.snowDepth || 0),
-            level: getSnowDepthLevel(weather?.snowDepth || 0)
+            value: weather?.anmSnowDepth !== undefined
+                ? `${weather.anmSnowDepth} cm (Măsurat la ${weather.anmStationName})`
+                : `${weather?.snowDepth} cm`,
+            remark: weather?.anmSnowDepth !== undefined
+                ? `Estimat Open-Meteo: ${weather.snowDepth} cm`
+                : getSnowDepthRemark(weather?.snowDepth || 0),
+            level: getSnowDepthLevel(weather?.anmSnowDepth !== undefined ? weather.anmSnowDepth : (weather?.snowDepth || 0))
         },
         {
             id: 'precip-prob',
