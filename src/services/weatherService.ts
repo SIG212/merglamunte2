@@ -25,6 +25,8 @@ export interface WeatherData {
     condition: string;
     sunrise: string;
     sunset: string;
+    anmSnowDepth?: number;
+    anmStationName?: string;
     avalancheRisk?: {
         level: number;
         text: string;
@@ -33,6 +35,31 @@ export interface WeatherData {
 }
 
 const AVALANCHE_DATA_URL = 'https://raw.githubusercontent.com/SIG212/meteo-scraper/main/date_meteo.json';
+const ANM_DATA_URL = 'https://www.meteoromania.ro/wp-json/meteoapi/v2/starea-vremii';
+
+// Mapping for ANM Stations (High/Low altitude)
+const ANM_STATION_MAPPING: Record<string, { high: string, low: string }> = {
+    'bucegi': { high: 'VARFUL OMU', low: 'SINAIA 1500' },
+    'fagaras': { high: 'BALEA LAC', low: 'VOINEASA' },
+    'rodnei': { high: 'IEZER', low: 'SIGHETUL MARMATIEI' },
+    'retezat': { high: 'PARANG', low: 'STRAJA' },
+    'piatra_craiului': { high: 'VARFUL OMU', low: 'PREDEAL' },
+    'bistritei': { high: 'CALIMANI RETITIS', low: 'POIANA STAMPEI' },
+    'ceahlau': { high: 'CEAHLAU TOACA', low: 'TOPLITA' },
+    'calimani': { high: 'CALIMANI RETITIS', low: 'POIANA STAMPEI' },
+    'hasmas': { high: 'CEAHLAU TOACA', low: 'JOSENI' },
+    'maramuresului': { high: 'IEZER', low: 'SIGHETUL MARMATIEI' },
+    'parang_sureanu': { high: 'PARANG', low: 'STRAJA' },
+    'ciucas_piatra_mare': { high: 'SINAIA 1500', low: 'PREDEAL' },
+    'tarcu_godeanu': { high: 'TARCU', low: 'CUNTU' },
+    'buila': { high: 'VOINEASA', low: 'POLOVRAGI' },
+    'cozia': { high: 'VOINEASA', low: 'POLOVRAGI' },
+    'iezer': { high: 'VARFUL OMU', low: 'SINAIA 1500' },
+    'baiului': { high: 'SINAIA 1500', low: 'PREDEAL' },
+    'cindrel': { high: 'PALTINIS', low: 'PALTINIS' },
+    'mehedinti_cernei': { high: 'CUNTU', low: 'BAILE HERCULANE' },
+    'apuseni': { high: 'VLADEASA 1800', low: 'BAISOARA' }
+};
 
 // Mapping between our mountain IDs and the JSON keys
 const AVALANCHE_MAPPING: Record<string, string> = {
@@ -67,9 +94,10 @@ export const weatherService = {
         const lon = isHigh ? coords.lon_high : coords.lon;
 
         // Fetch Weather and Avalanche data in parallel
-        const [weatherRes, avalancheRes] = await Promise.all([
+        const [weatherRes, avalancheRes, anmRes] = await Promise.all([
             fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&elevation=${altitude}&daily=uv_index_max,sunrise,sunset&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall,snow_depth,visibility,weather_code,wind_speed_80m,windgusts_10m,relative_humidity_2m,precipitation_probability,precipitation&timezone=Europe/Bucharest&windspeed_unit=kmh&precipitation_unit=mm&forecast_days=16`),
-            fetch(AVALANCHE_DATA_URL).catch(() => null)
+            fetch(AVALANCHE_DATA_URL).catch(() => null),
+            fetch(ANM_DATA_URL).catch(() => null)
         ]);
 
         if (!weatherRes.ok) {
@@ -78,6 +106,32 @@ export const weatherService = {
 
         const weatherData = await weatherRes.json();
         let avalancheRisk;
+        let anmSnowDepth;
+        let anmStationName;
+
+        // Parse ANM Data
+        if (anmRes && anmRes.ok) {
+            try {
+                const anmJson = await anmRes.json();
+                const mapping = ANM_STATION_MAPPING[mountainId];
+                if (mapping) {
+                    const targetStation = isHigh ? mapping.high : mapping.low;
+                    const feature = anmJson.features.find((f: any) =>
+                        f.properties.nume && f.properties.nume.toUpperCase().includes(targetStation)
+                    );
+
+                    if (feature && feature.properties.zapada && feature.properties.zapada !== 'indisponibil') {
+                        const snowVal = parseInt(feature.properties.zapada);
+                        if (!isNaN(snowVal)) {
+                            anmSnowDepth = snowVal;
+                            anmStationName = feature.properties.nume;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn("Failed to parse ANM data", e);
+            }
+        }
 
         if (avalancheRes && avalancheRes.ok) {
             const avalancheJson = await avalancheRes.json();
@@ -199,7 +253,9 @@ export const weatherService = {
             condition: totalPrecip > 0 ? (totalSnowfall > totalPrecip / 2 ? 'Snowy' : 'Rainy') : 'Clear/Cloudy',
             sunrise: formatTime(sunriseISO),
             sunset: formatTime(sunsetISO),
-            avalancheRisk
+            avalancheRisk,
+            anmSnowDepth,
+            anmStationName
         };
     }
 };
