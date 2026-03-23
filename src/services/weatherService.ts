@@ -95,10 +95,11 @@ export const weatherService = {
 
         // Fetch Weather and Avalanche data in parallel
         const [weatherRes, avalancheRes, anmRes] = await Promise.all([
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&elevation=${altitude}&daily=uv_index_max,sunrise,sunset&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall,snow_depth,visibility,weather_code,wind_speed_80m,windgusts_10m,relative_humidity_2m,precipitation_probability,precipitation&timezone=Europe/Bucharest&windspeed_unit=kmh&precipitation_unit=mm&forecast_days=16`),
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&elevation=${altitude}&daily=uv_index_max,sunrise,sunset&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall,snow_depth,visibility,weather_code,wind_speed_80m,windgusts_10m,relative_humidity_2m,precipitation_probability,precipitation&timezone=Europe/Bucharest&windspeed_unit=kmh&precipitation_unit=mm&forecast_days=16&models=ecmwf_ifs`),
             fetch(AVALANCHE_DATA_URL).catch(() => null),
             fetch(ANM_DATA_URL).catch(() => null)
         ]);
+
 
         if (!weatherRes.ok) {
             throw new Error('Failed to fetch weather data from Open-Meteo');
