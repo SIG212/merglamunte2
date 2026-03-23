@@ -129,10 +129,14 @@ export const weatherService = {
                     );
 
                     if (feature && feature.properties.zapada && feature.properties.zapada !== 'indisponibil') {
-                        const snowVal = parseInt(feature.properties.zapada);
-                        if (!isNaN(snowVal)) {
+                        const zapStr = feature.properties.zapada;
+                        const match = zapStr.match(/(\d+)/);
+                        const snowVal = match ? parseInt(match[1]) : (zapStr.includes('sub') ? 0 : undefined);
+
+                        if (snowVal !== undefined) {
                             anmSnowDepth = snowVal;
                             anmStationName = feature.properties.nume;
+
                             anmUpdatedAt = feature.properties.actualizat ? feature.properties.actualizat.replace(/&nbsp;/g, ' ') : undefined;
                         }
                     }
