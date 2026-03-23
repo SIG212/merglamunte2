@@ -27,12 +27,15 @@ export interface WeatherData {
     sunset: string;
     anmSnowDepth?: number;
     anmStationName?: string;
+    anmUpdatedAt?: string;
     avalancheRisk?: {
         level: number;
         text: string;
         message?: string;
+        updatedAt?: string;
     };
 }
+
 
 const AVALANCHE_DATA_URL = 'https://raw.githubusercontent.com/SIG212/meteo-scraper/main/date_meteo.json';
 const ANM_DATA_URL = 'https://www.meteoromania.ro/wp-json/meteoapi/v2/starea-vremii';
@@ -110,8 +113,11 @@ export const weatherService = {
         let avalancheRisk;
         let anmSnowDepth;
         let anmStationName;
+        let anmUpdatedAt;
+        let avalancheUpdatedAt;
 
         // Parse ANM Data
+
         if (anmRes && anmRes.ok) {
             try {
                 const anmJson = await anmRes.json();
@@ -127,9 +133,11 @@ export const weatherService = {
                         if (!isNaN(snowVal)) {
                             anmSnowDepth = snowVal;
                             anmStationName = feature.properties.nume;
+                            anmUpdatedAt = feature.properties.actualizat ? feature.properties.actualizat.replace(/&nbsp;/g, ' ') : undefined;
                         }
                     }
                 }
+
             } catch (e) {
                 console.warn("Failed to parse ANM data", e);
             }
@@ -137,8 +145,10 @@ export const weatherService = {
 
         if (avalancheRes && avalancheRes.ok) {
             const avalancheJson = await avalancheRes.json();
+            avalancheUpdatedAt = avalancheJson.ultima_actualizare;
             const mappingKey = AVALANCHE_MAPPING[mountainId];
             const massifData = mappingKey ? avalancheJson.date[mappingKey] : null;
+
 
             if (massifData) {
                 // Determine altitude category for avalanche
@@ -148,8 +158,10 @@ export const weatherService = {
                     avalancheRisk = {
                         level: riskData.nivel,
                         text: riskData.text,
-                        message: massifData.mesaj
+                        message: massifData.mesaj,
+                        updatedAt: avalancheUpdatedAt
                     };
+
                 }
             }
         }
@@ -260,7 +272,8 @@ export const weatherService = {
             sunset: formatTime(sunsetISO),
             avalancheRisk,
             anmSnowDepth,
-            anmStationName
+            anmStationName,
+            anmUpdatedAt
         };
     }
 };

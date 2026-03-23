@@ -145,16 +145,17 @@ export default function ForecastPage() {
         },
         {
             id: 'snow-depth',
-            label: "Zăpadă (totală)",
+            label: "Zăpadă",
             icon: "ac_unit",
             value: weather?.anmSnowDepth !== undefined
-                ? `${weather.anmSnowDepth} cm (Măsurat la ${weather.anmStationName})`
+                ? `${weather.anmSnowDepth} cm`
                 : `${weather?.snowDepth} cm`,
             remark: weather?.anmSnowDepth !== undefined
-                ? `Estimat Open-Meteo: ${weather.snowDepth} cm`
+                ? `Măsurat la ${weather.anmStationName} (${weather.anmUpdatedAt || 'N/A'})`
                 : getSnowDepthRemark(weather?.snowDepth || 0),
             level: getSnowDepthLevel(weather?.anmSnowDepth !== undefined ? weather.anmSnowDepth : (weather?.snowDepth || 0))
         },
+
         {
             id: 'precip-prob',
             label: "Probabilitate Precip.",
@@ -266,7 +267,12 @@ export default function ForecastPage() {
         return 'text-emerald-400';
     };
 
+    const prognozaIds = ['windchill', 'wind', 'precip', 'total-precip', 'visibility', 'uv', 'humidity', 'precip-prob', 'gusts'];
+    const prognozaFactors = primaryFactors.filter(f => prognozaIds.includes(f.id));
+    const todayFactors = primaryFactors.filter(f => f.id === 'snow-depth');
+
     return (
+
         <div className="min-h-screen relative font-inter text-slate-900 dark:text-white overflow-x-hidden">
             {/* 🖼️ BACKGROUND */}
             <div className="fixed inset-0 z-0">
@@ -377,38 +383,56 @@ export default function ForecastPage() {
                                 </button>
 
                                 {showWeatherFactors && (
-                                    <div className="px-3 pb-6 grid grid-cols-2 gap-3 animate-in slide-in-from-top-2 fade-in duration-300">
-                                        {/* Avalanche Priority Card */}
-                                        {avalancheInfo && (
-                                            <div className={`glass p-4 rounded-2xl flex flex-col justify-between h-36 text-white border transition-all ${avalancheInfo.uiLevel === 'red' ? 'bg-red-600/30 border-red-500/40' :
-                                                avalancheInfo.uiLevel === 'yellow' ? 'bg-amber-600/30 border-amber-500/40' :
-                                                    'bg-white/5 border-white/5'
-                                                }`}>
-                                                <div className="flex items-center space-x-2 opacity-60">
-                                                    <span className="material-symbols-outlined text-sm">report</span>
-                                                    <span className="text-[9px] font-bold uppercase tracking-widest">Avalanche</span>
-                                                </div>
-                                                <div className="text-3xl font-bold tracking-tighter">{avalancheInfo.level}/5</div>
-                                                <div className="text-[10px] opacity-80 leading-tight font-medium italic">{avalancheInfo.text}</div>
+                                    <div className="px-3 pb-6 animate-in slide-in-from-top-2 fade-in duration-300 space-y-5">
+                                        {/* SECTION 1: PROGNOZA */}
+                                        <div>
+                                            <h3 className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-2 px-1">Prognoza</h3>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {prognozaFactors.map(f => (
+                                                    <div key={f.id} className={`glass p-4 rounded-2xl flex flex-col justify-between h-36 text-white border transition-all ${f.level === 'red' ? 'bg-red-600/20 border-red-500/30' : f.level === 'yellow' ? 'bg-amber-600/20 border-amber-500/30' : 'bg-white/5 border-white/5'}`}>
+                                                        <div className="flex items-center space-x-2 opacity-60">
+                                                            <span className="material-symbols-outlined text-sm">{f.icon}</span>
+                                                            <span className="text-[9px] font-bold uppercase tracking-widest">{f.label.split(' (')[0]}</span>
+                                                        </div>
+                                                        <div className="text-2xl font-bold tracking-tight">{f.value}</div>
+                                                        <div className="text-[10px] opacity-70 leading-tight line-clamp-2 font-medium italic">{f.remark}</div>
+                                                    </div>
+                                                ))}
                                             </div>
-                                        )}
+                                        </div>
 
-                                        {/* Other Factors */}
-                                        {primaryFactors.filter(f => f.id !== 'avalanche').map(f => (
-                                            <div key={f.id} className={`glass p-4 rounded-2xl flex flex-col justify-between h-36 text-white border transition-all ${f.level === 'red' ? 'bg-red-600/20 border-red-500/30' :
-                                                f.level === 'yellow' ? 'bg-amber-600/20 border-amber-500/30' :
-                                                    'bg-white/5 border-white/5'
-                                                }`}>
-                                                <div className="flex items-center space-x-2 opacity-60">
-                                                    <span className="material-symbols-outlined text-sm">{f.icon}</span>
-                                                    <span className="text-[9px] font-bold uppercase tracking-widest">{f.label.split(' (')[0]}</span>
-                                                </div>
-                                                <div className="text-2xl font-bold tracking-tight">{f.value}</div>
-                                                <div className="text-[10px] opacity-70 leading-tight line-clamp-2 font-medium italic">{f.remark}</div>
+                                        {/* SECTION 2: FACTORI DE ASTAZI */}
+                                        <div>
+                                            <h3 className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-2 px-1">Factori de astăzi care introduc riscuri</h3>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {avalancheInfo && (
+                                                    <div className={`glass p-4 rounded-2xl flex flex-col justify-between h-36 text-white border transition-all ${avalancheInfo.uiLevel === 'red' ? 'bg-red-600/30 border-red-500/40' : avalancheInfo.uiLevel === 'yellow' ? 'bg-amber-600/30 border-amber-500/40' : 'bg-white/5 border-white/5'}`}>
+                                                        <div className="flex items-center space-x-2 opacity-60">
+                                                            <span className="material-symbols-outlined text-sm">report</span>
+                                                            <span className="text-[9px] font-bold uppercase tracking-widest">Avalansa</span>
+                                                        </div>
+                                                        <div className="text-3xl font-bold tracking-tighter">{avalancheInfo.level}/5</div>
+                                                        <div className="text-[10px] opacity-80 leading-tight font-medium italic">
+                                                            <div>{avalancheInfo.text}</div>
+                                                            {weather?.avalancheRisk?.updatedAt && <div className="mt-1 text-[8px] opacity-60">Raport citit la: {new Date(weather.avalancheRisk.updatedAt).toLocaleDateString('ro-RO')}</div>}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {todayFactors.map(f => (
+                                                    <div key={f.id} className={`glass p-4 rounded-2xl flex flex-col justify-between h-36 text-white border transition-all ${f.level === 'red' ? 'bg-red-600/20 border-red-500/30' : f.level === 'yellow' ? 'bg-amber-600/20 border-amber-500/30' : 'bg-white/5 border-white/5'}`}>
+                                                        <div className="flex items-center space-x-2 opacity-60">
+                                                            <span className="material-symbols-outlined text-sm">{f.icon}</span>
+                                                            <span className="text-[9px] font-bold uppercase tracking-widest">{f.label.split(' (')[0]}</span>
+                                                        </div>
+                                                        <div className="text-2xl font-bold tracking-tight">{f.value}</div>
+                                                        <div className="text-[10px] opacity-70 leading-tight line-clamp-2 font-medium italic">{f.remark}</div>
+                                                    </div>
+                                                ))}
                                             </div>
-                                        ))}
+                                        </div>
                                     </div>
                                 )}
+
                             </div>
                         </section>
 
