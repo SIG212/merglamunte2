@@ -145,16 +145,23 @@ export default function ForecastPage() {
         },
         {
             id: 'snow-depth',
-            label: "Zăpadă",
+            label: "Zăpadă (Prognoză)",
             icon: "ac_unit",
-            value: weather?.anmSnowDepth !== undefined
-                ? `${weather.anmSnowDepth} cm`
-                : `${weather?.snowDepth} cm`,
+            value: `${weather?.snowDepth} cm`,
+            remark: getSnowDepthRemark(weather?.snowDepth || 0),
+            level: getSnowDepthLevel(weather?.snowDepth || 0)
+        },
+        {
+            id: 'anm-snow-depth',
+            label: "Strat Zăpadă ANM",
+            icon: "ac_unit",
+            value: weather?.anmSnowDepth !== undefined ? `${weather.anmSnowDepth} cm` : 'N/A',
             remark: weather?.anmSnowDepth !== undefined
                 ? `Măsurat la ${weather.anmStationName} (${weather.anmUpdatedAt || 'N/A'})`
-                : getSnowDepthRemark(weather?.snowDepth || 0),
-            level: getSnowDepthLevel(weather?.anmSnowDepth !== undefined ? weather.anmSnowDepth : (weather?.snowDepth || 0))
+                : 'Măsurătoare indisponibilă pentru această dată.',
+            level: getSnowDepthLevel(weather?.anmSnowDepth || 0)
         },
+
 
         {
             id: 'precip-prob',
@@ -267,9 +274,10 @@ export default function ForecastPage() {
         return 'text-emerald-400';
     };
 
-    const prognozaIds = ['windchill', 'wind', 'precip', 'total-precip', 'visibility', 'uv', 'humidity', 'precip-prob', 'gusts'];
+    const prognozaIds = ['windchill', 'wind', 'precip', 'total-precip', 'visibility', 'uv', 'humidity', 'precip-prob', 'gusts', 'snow-depth'];
     const prognozaFactors = primaryFactors.filter(f => prognozaIds.includes(f.id));
-    const todayFactors = primaryFactors.filter(f => f.id === 'snow-depth');
+    const todayFactors = primaryFactors.filter(f => f.id === 'anm-snow-depth');
+
 
     return (
 
