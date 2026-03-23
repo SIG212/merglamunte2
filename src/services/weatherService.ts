@@ -95,10 +95,11 @@ export const weatherService = {
 
         // Fetch Weather and Avalanche data in parallel
         const [weatherRes, avalancheRes, anmRes] = await Promise.all([
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&elevation=${altitude}&daily=uv_index_max,sunrise,sunset&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall,snow_depth,visibility,weather_code,wind_speed_80m,windgusts_10m,relative_humidity_2m,precipitation_probability,precipitation&timezone=Europe/Bucharest&windspeed_unit=kmh&precipitation_unit=mm&forecast_days=16&models=ecmwf_ifs`),
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&elevation=${altitude}&daily=uv_index_max,sunrise,sunset&hourly=temperature_2m,apparent_temperature,rain,showers,snowfall,snow_depth,visibility,weather_code,wind_speed_80m,wind_speed_10m,windgusts_10m,relative_humidity_2m,precipitation_probability,precipitation&timezone=Europe/Bucharest&windspeed_unit=kmh&precipitation_unit=mm&forecast_days=16&models=ecmwf_ifs`),
             fetch(AVALANCHE_DATA_URL).catch(() => null),
             fetch(ANM_DATA_URL).catch(() => null)
         ]);
+
 
 
         if (!weatherRes.ok) {
@@ -200,7 +201,8 @@ export const weatherService = {
 
             totalSnowfall += weatherData.hourly.snowfall[hIdx] || 0;
 
-            const hWind = weatherData.hourly.wind_speed_80m?.[hIdx] || weatherData.hourly.windspeed_10m?.[hIdx] || 0;
+            const hWind = weatherData.hourly.wind_speed_80m?.[hIdx] || weatherData.hourly.wind_speed_10m?.[hIdx] || 0;
+
             if (hWind > maxWindSpeed) maxWindSpeed = hWind;
 
             const hGusts = weatherData.hourly.windgusts_10m?.[hIdx] || 0;
