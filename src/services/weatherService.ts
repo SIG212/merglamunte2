@@ -205,7 +205,8 @@ export const weatherService = {
 
             if (hWind > maxWindSpeed) maxWindSpeed = hWind;
 
-            const hGusts = weatherData.hourly.windgusts_10m?.[hIdx] || 0;
+            const hGusts = weatherData.hourly.windgusts_10m?.[hIdx] || hWind || 0;
+
             if (hGusts > maxGusts) maxGusts = hGusts;
 
             const hApparent = weatherData.hourly.apparent_temperature[hIdx];
@@ -253,7 +254,8 @@ export const weatherService = {
                 h16: Math.round(vis16)
             },
             humidity: countHumidity > 0 ? Math.round(sumHumidity / countHumidity) : 0,
-            condition: totalPrecip > 0 ? (totalSnowfall > totalPrecip / 2 ? 'Snowy' : 'Rainy') : 'Clear/Cloudy',
+            condition: totalPrecip > 0 ? (maxTemp <= 1 ? 'Snowy' : (totalSnowfall > totalPrecip / 2 ? 'Snowy' : 'Rainy')) : 'Clear/Cloudy',
+
             sunrise: formatTime(sunriseISO),
             sunset: formatTime(sunsetISO),
             avalancheRisk,
