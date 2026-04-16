@@ -24,13 +24,15 @@ export default function SelectionPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-50 font-jost flex flex-col items-center justify-center p-6 md:p-12">
-            <div className="w-full max-w-2xl bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl">
-                <header className="text-center mb-10">
-                    <h1 className="text-5xl font-black tracking-tighter bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2">
-                        Merglamunte2
-                    </h1>
-                    <p className="text-slate-400">Planifică-ți aventura montană cu precizie Meteoblue</p>
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 md:p-12 bg-white text-slate-900 font-sans">
+            <div className="w-full max-w-2xl bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <header className="mb-10 flex w-full items-center justify-between">
+                    <a href="https://merglamunte.ro" className="text-3xl font-black tracking-tight text-slate-900 cursor-pointer hover:opacity-80 transition-opacity">
+                        merglamunte<span className="text-emerald-600">.ro</span>
+                    </a>
+                    <div className="hidden md:block text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-400">
+                       Tot ce ai nevoie ca sa mergi la munte.
+                    </div>
                 </header>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -41,7 +43,7 @@ export default function SelectionPage() {
                             value={selectedMountainId}
                             onChange={(e) => setSelectedMountainId(e.target.value)}
                             required
-                            className="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all appearance-none cursor-pointer hover:bg-slate-800"
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all appearance-none cursor-pointer hover:bg-slate-100"
                         >
                             <option value="" disabled>Alege un munte...</option>
                             {MOUNTAINS.map(m => (
@@ -59,7 +61,7 @@ export default function SelectionPage() {
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
                                 required
-                                className="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all cursor-pointer"
+                                className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all cursor-pointer hover:bg-slate-100"
                             />
                         </div>
 
@@ -75,7 +77,7 @@ export default function SelectionPage() {
                                 step="100"
                                 value={altitude}
                                 onChange={(e) => setAltitude(parseInt(e.target.value))}
-                                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                             />
                             <div className="flex justify-between text-xs text-slate-600 px-1">
                                 <span>0m</span>
@@ -87,14 +89,12 @@ export default function SelectionPage() {
                     <button
                         type="submit"
                         disabled={!selectedMountainId}
-                        className="w-full group relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 to-cyan-600 p-[2px] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg shadow-emerald-900/20"
+                        className="w-full group bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl px-6 py-4 flex items-center justify-center space-x-2 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg shadow-emerald-600/20"
                     >
-                        <div className="bg-slate-900 group-hover:bg-transparent transition-colors rounded-[14px] px-6 py-4 flex items-center justify-center space-x-2">
-                            <span className="font-bold text-lg tracking-tight">Vezi Prognoza</span>
-                            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                            </svg>
-                        </div>
+                        <span className="font-bold text-lg tracking-tight">Vezi Prognoza</span>
+                        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
                     </button>
                 </form>
             </div>

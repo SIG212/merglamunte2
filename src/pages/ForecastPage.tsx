@@ -20,7 +20,8 @@ export default function ForecastPage() {
     const handleShare = async () => {
         const categories = [
             { id: 'rain', title: 'Pentru Ploaie', show: (weather?.maxPrecipHour || 0) > 0.1, items: ['Poncho/pelerina', 'Hardshell', 'Suprapantaloni', 'Bocanci impermeabili', 'Sapca/palarie', 'Șosete de schimb', 'Folie de supraviețuire', 'Frontala', 'Baterie externă'] },
-            { id: 'winter', title: 'Pentru Zăpadă', show: (season === 'Iarnă' || (weather?.snowDepth || 0) > 0), items: ['Parazapezi', 'Pantaloni softshell', 'Bocanci impermeabili', 'Polar', 'Gherute', 'Șosete de iarna (merinos)', 'Hardshell', 'Manusi (textile+imp.)', 'Caciula', 'Ochelari de soare'] },
+            { id: 'winter', title: 'Pentru Zăpadă', show: (season === 'Iarnă' || (weather?.snowDepth || 0) > 0), items: ['Parazapezi', 'Pantaloni lungi', 'Bocanci impermeabili', 'Polar', 'Gherute', 'Șosete de iarna', 'Hardshell', 'Manusi (textile+imp.)', 'Caciula', 'Ochelari de soare'] },
+            { id: 'winter_tech', title: 'Pentru zăpadă +1800m si traseu tehnic', show: ((season === 'Iarnă' || (weather?.snowDepth || 0) > 0) && altitude >= 1800), items: ['Colțari', 'Piolet', 'Cască de alpinism', 'Kit Avalanșă', 'Bocanci de iarna', 'Ochelari de schi', 'Ham si coarda'] },
             { id: 'normal', title: 'Drumeție Normală', show: true, items: ['Bocanci de munte', 'Polar', 'Softshell', 'Pantaloni lungi', 'Tricou/bluza', 'Sosete', 'Trusa prim ajutor', 'Ochelari de soare', 'Frontala', 'Baterie externă', 'Mancare', 'Pijamale', 'Trusa igiena', 'Haine schimb'] }
         ];
 
@@ -36,7 +37,7 @@ export default function ForecastPage() {
             }
         });
 
-        text += `\nGenerat cu Merglamunte`;
+        text += `\nGenerat cu Merglamunte.ro`;
 
         try {
             if (navigator.share) {
@@ -270,8 +271,8 @@ export default function ForecastPage() {
     const getAvalancheColorClass = (level: number, isUnknown?: boolean) => {
         if (isUnknown) return 'text-red-500 animate-pulse';
         if (level >= 4) return 'text-red-500';
-        if (level === 3) return 'text-amber-400';
-        return 'text-emerald-400';
+        if (level === 3) return 'text-amber-500';
+        return 'text-alpine-emerald';
     };
 
     const prognozaIds = ['windchill', 'wind', 'precip', 'total-precip', 'visibility', 'uv', 'humidity', 'precip-prob', 'gusts', 'snow-depth'];
@@ -281,41 +282,50 @@ export default function ForecastPage() {
 
     return (
 
-        <div className="min-h-screen relative font-inter text-slate-900 dark:text-white overflow-x-hidden">
-            {/* 🖼️ BACKGROUND */}
-            <div className="fixed inset-0 z-0">
-                <div className="absolute inset-0 bg-slate-950/40 z-10" />
-                <img
-                    src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1000"
-                    className="w-full h-full object-cover"
-                    alt="Mountain Background"
-                />
+        <div className="min-h-screen relative font-sans text-alpine-slate bg-white overflow-x-hidden">
+
+            <div className="w-full flex items-center justify-between p-6 md:px-12 max-w-6xl mx-auto">
+                <a href="https://merglamunte.ro" className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 cursor-pointer hover:opacity-80 transition-opacity">
+                    merglamunte<span className="text-emerald-600">.ro</span>
+                </a>
+                <div className="hidden md:block text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-400">
+                    Tot ce ai nevoie ca sa mergi la munte.
+                </div>
             </div>
 
-            <main className="relative z-10 max-w-md mx-auto p-4 pb-32 min-h-screen">
-                <header className="text-center mt-8 mb-8 drop-shadow-lg">
+            <div className="max-w-md md:max-w-xl mx-auto mb-6 px-4">
+                <div className="bg-amber-50/50 border border-amber-100 rounded-2xl p-4 flex items-start space-x-3 shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
+                    <span className="material-symbols-outlined text-amber-500 text-base mt-0.5 shrink-0">info</span>
+                    <p className="text-xs text-amber-800 leading-relaxed font-medium">
+                        Această funcționalitate este încă în testare și poate avea erori. Te rugăm să o folosești ca pe un instrument orientativ, dar <strong>verifică condițiile și mai amănunțit</strong> înainte să pleci la drum.
+                    </p>
+                </div>
+            </div>
+
+            <main className="relative z-10 max-w-md mx-auto p-4 pb-12">
+                <header className="text-center mt-2 mb-8">
                     <button
                         onClick={() => navigate('/')}
-                        className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 hover:text-white transition-colors"
+                        className="text-zinc-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 hover:text-alpine-emerald transition-colors"
                     >
                         Înapoi
                     </button>
-                    <h1 className="text-4xl font-bold tracking-tight text-white mb-2 uppercase">{mountain.name}</h1>
-                    <div className="flex items-center justify-center space-x-2 text-white/90 text-sm font-medium">
+                    <h1 className="text-4xl font-black leading-tight text-alpine-slate mb-2 uppercase">{mountain.name}</h1>
+                    <div className="flex items-center justify-center space-x-2 text-zinc-500 text-sm font-medium">
                         <span>{date}</span>
                         <span className="opacity-50">|</span>
                         <span>{altitude} m</span>
                     </div>
 
                     {weather && (
-                        <div className="flex items-center justify-center gap-4 mt-4 text-xs font-medium text-white/70 bg-white/5 inline-flex px-4 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
+                        <div className="flex items-center justify-center gap-4 mt-4 text-xs font-bold text-alpine-slate bg-zinc-50 px-5 py-2 rounded-2xl border border-zinc-200">
                             <div className="flex items-center gap-1.5">
-                                <span className="material-symbols-outlined text-amber-400 text-sm">wb_sunny</span>
+                                <span className="material-symbols-outlined text-alpine-orange text-sm">wb_sunny</span>
                                 <span>{weather.sunrise}</span>
                             </div>
-                            <div className="w-1 h-1 rounded-full bg-white/20"></div>
+                            <div className="w-1 h-1 rounded-full bg-zinc-300"></div>
                             <div className="flex items-center gap-1.5">
-                                <span className="material-symbols-outlined text-indigo-300 text-sm">bedtime</span>
+                                <span className="material-symbols-outlined text-sky-600 text-sm">bedtime</span>
                                 <span>{weather.sunset}</span>
                             </div>
                         </div>
@@ -324,48 +334,51 @@ export default function ForecastPage() {
 
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center py-20">
-                        <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin mb-4"></div>
-                        <p className="text-white/50 text-xs font-bold uppercase tracking-widest italic tracking-[0.2em]">Analizăm munții...</p>
+                        <div className="w-10 h-10 border-2 border-zinc-200 border-t-alpine-emerald rounded-full animate-spin mb-4"></div>
+                        <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest italic tracking-[0.2em]">Analizăm munții...</p>
                     </div>
                 ) : isError ? (
-                    <div className="glass bg-red-950/60 border border-red-500/20 rounded-3xl p-8 text-center text-white">
-                        <p className="font-bold mb-4">Eroare la preluarea datelor.</p>
-                        <button onClick={() => window.location.reload()} className="px-6 py-2 bg-white/10 rounded-full text-xs font-bold uppercase tracking-widest border border-white/10">Reîncearcă</button>
+                    <div className="bg-red-50 border border-red-200 rounded-bento p-8 text-center text-red-950">
+                        <p className="font-bold mb-4 font-black">Eroare la preluarea datelor.</p>
+                        <button onClick={() => window.location.reload()} className="px-6 py-3 bg-red-100 hover:bg-red-200 rounded-2xl text-xs font-bold uppercase tracking-widest transition-colors font-sans border border-red-200">Reîncearcă</button>
                     </div>
                 ) : (
                     <div className="space-y-6">
                         {/* ⚠️ SUMMARY / DIFFICULT CONDITIONS */}
                         <section>
-                            <div className="glass bg-slate-950/80 border border-white/20 rounded-3xl p-6 shadow-2xl">
-                                <div className="flex items-center space-x-3 mb-5">
-                                    <span className={`material-symbols-outlined ${overallStatus === 'red' ? 'text-red-400' :
-                                        overallStatus === 'yellow' ? 'text-amber-300' : 'text-emerald-400'
+                            <div className="bg-white border border-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-bento p-8 relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl">
+                                <span className="material-symbols-outlined absolute -bottom-6 -right-6 text-8xl opacity-[0.03] -rotate-12 pointer-events-none">
+                                    {overallStatus === 'green' ? 'check_circle' : 'warning'}
+                                </span>
+                                <div className="flex items-center space-x-3 mb-6 relative z-10">
+                                    <span className={`material-symbols-outlined text-3xl ${overallStatus === 'red' ? 'text-red-500' :
+                                        overallStatus === 'yellow' ? 'text-amber-500' : 'text-alpine-emerald'
                                         }`}>
                                         {overallStatus === 'green' ? 'check_circle' : 'warning'}
                                     </span>
-                                    <h2 className={`uppercase text-xl font-extrabold tracking-[-0.1em] ${overallStatus === 'red' ? 'text-red-400' :
-                                        overallStatus === 'yellow' ? 'text-amber-300' : 'text-emerald-400'
+                                    <h2 className={`uppercase text-2xl font-black tracking-tight ${overallStatus === 'red' ? 'text-red-500' :
+                                        overallStatus === 'yellow' ? 'text-amber-500' : 'text-alpine-emerald'
                                         }`}>
                                         {statusText}
                                     </h2>
                                 </div>
-                                <div className="space-y-4">
-                                    <div className="flex items-center space-x-3 text-white/90">
-                                        <span className="material-symbols-outlined text-lg text-white/40">calendar_month</span>
-                                        <span className="text-sm font-semibold">Sezon: {season}</span>
+                                <div className="space-y-4 relative z-10">
+                                    <div className="flex items-center space-x-3 text-zinc-600">
+                                        <span className="material-symbols-outlined text-lg text-zinc-300">calendar_month</span>
+                                        <span className="text-sm font-medium">Sezon: <span className="font-bold text-alpine-slate">{season}</span></span>
                                     </div>
-                                    <div className="flex items-center space-x-3 text-white/90">
-                                        <span className="material-symbols-outlined text-lg text-white/40">landscape</span>
-                                        <span className="text-sm font-semibold">Altitudine: {altitude} m</span>
+                                    <div className="flex items-center space-x-3 text-zinc-600">
+                                        <span className="material-symbols-outlined text-lg text-zinc-300">landscape</span>
+                                        <span className="text-sm font-medium">Altitudine: <span className="font-bold text-alpine-slate">{altitude} m</span></span>
                                     </div>
                                     {urgentFactors.length > 0 && (
-                                        <div className="flex items-center space-x-3 text-white/90">
-                                            <span className="material-symbols-outlined text-lg text-white/40">list_alt</span>
-                                            <span className="text-sm font-semibold">{conditionString}</span>
+                                        <div className="flex items-center space-x-3 text-zinc-600">
+                                            <span className="material-symbols-outlined text-lg text-red-300">list_alt</span>
+                                            <span className="text-sm font-medium text-red-500">{conditionString}</span>
                                         </div>
                                     )}
                                     {avalancheInfo && (avalancheInfo.level > 0 || avalancheInfo.isUnknownHighRisk) && (
-                                        <div className={`flex items-center space-x-3 pt-2 border-t border-white/10 ${getAvalancheColorClass(avalancheInfo.level, avalancheInfo.isUnknownHighRisk)}`}>
+                                        <div className={`flex items-center space-x-3 pt-4 border-t border-zinc-100 ${getAvalancheColorClass(avalancheInfo.level, avalancheInfo.isUnknownHighRisk)}`}>
                                             <span className="material-symbols-outlined text-lg">dangerous</span>
                                             <span className="text-sm font-bold tracking-tight">Risc Avalanșă: {avalancheInfo.value}</span>
                                         </div>
@@ -376,34 +389,35 @@ export default function ForecastPage() {
 
                         {/* 🌡️ WEATHER FACTORS */}
                         <section>
-                            <div className="glass bg-white/10 dark:bg-slate-900/40 border border-white/10 rounded-3xl overflow-hidden shadow-xl">
+                            <div className="bg-white border border-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-bento overflow-hidden mb-6">
                                 <button
                                     onClick={() => setShowWeatherFactors(!showWeatherFactors)}
-                                    className="w-full flex items-center justify-between p-6 text-white text-left group"
+                                    className="w-full flex items-center justify-between p-6 text-alpine-slate text-left group"
                                 >
                                     <div className="flex items-center space-x-3">
-                                        <span className="material-symbols-outlined opacity-60 group-hover:opacity-100 transition-opacity">thermostat</span>
-                                        <span className="font-bold uppercase text-xs tracking-[0.2em]">Factori Meteo</span>
+                                        <span className="material-symbols-outlined text-zinc-400 group-hover:text-alpine-emerald transition-colors">thermostat</span>
+                                        <span className="font-black uppercase text-xs tracking-[0.2em] text-alpine-slate">Factori Meteo</span>
                                     </div>
-                                    <span className="material-symbols-outlined opacity-60">
+                                    <span className="material-symbols-outlined text-zinc-400">
                                         {showWeatherFactors ? 'expand_less' : 'expand_more'}
                                     </span>
                                 </button>
 
                                 {showWeatherFactors && (
-                                    <div className="px-3 pb-6 animate-in slide-in-from-top-2 fade-in duration-300 space-y-5">
+                                    <div className="px-5 pb-6 animate-in slide-in-from-top-2 fade-in duration-300 space-y-6">
                                         {/* SECTION 1: PROGNOZA */}
                                         <div>
-                                            <h3 className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-2 px-1">Prognoza</h3>
+                                            <h3 className="text-zinc-400 text-[10px] font-black uppercase tracking-widest mb-3 px-1">Prognoza</h3>
                                             <div className="grid grid-cols-2 gap-3">
                                                 {prognozaFactors.map(f => (
-                                                    <div key={f.id} className={`glass p-4 rounded-2xl flex flex-col justify-between h-36 text-white border transition-all ${f.level === 'red' ? 'bg-red-600/20 border-red-500/30' : f.level === 'yellow' ? 'bg-amber-600/20 border-amber-500/30' : 'bg-white/5 border-white/5'}`}>
-                                                        <div className="flex items-center space-x-2 opacity-60">
-                                                            <span className="material-symbols-outlined text-sm">{f.icon}</span>
-                                                            <span className="text-[9px] font-bold uppercase tracking-widest">{f.label.split(' (')[0]}</span>
+                                                    <div key={f.id} className={`bg-zinc-50/50 p-5 rounded-3xl flex flex-col justify-between h-40 border border-zinc-100 shadow-sm transition-all hover:bg-white hover:-translate-y-1 hover:shadow-md relative overflow-hidden group ${f.level === 'red' ? 'ring-1 ring-red-200 bg-red-50/50' : f.level === 'yellow' ? 'ring-1 ring-amber-200 bg-amber-50/50' : ''}`}>
+                                                        <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-6xl opacity-[0.03] -rotate-12 pointer-events-none group-hover:opacity-[0.06] transition-opacity">{f.icon}</span>
+                                                        <div className="flex items-center space-x-2 relative z-10">
+                                                            <span className={`material-symbols-outlined text-sm ${f.level === 'red' ? 'text-red-500' : f.level === 'yellow' ? 'text-amber-500' : 'text-alpine-emerald'}`}>{f.icon}</span>
+                                                            <span className={`text-[9px] font-black uppercase tracking-widest ${f.level === 'red' ? 'text-red-600' : f.level === 'yellow' ? 'text-amber-600' : 'text-alpine-emerald'}`}>{f.label.split(' (')[0]}</span>
                                                         </div>
-                                                        <div className="text-2xl font-bold tracking-tight">{f.value}</div>
-                                                        <div className="text-[10px] opacity-70 leading-tight line-clamp-2 font-medium italic">{f.remark}</div>
+                                                        <div className={`text-2xl font-black tracking-tight mt-1 relative z-10 ${f.level === 'red' ? 'text-red-600' : f.level === 'yellow' ? 'text-amber-600' : 'text-alpine-slate'}`}>{f.value}</div>
+                                                        <div className="text-[10px] text-zinc-500 leading-snug font-medium mt-auto relative z-10">{f.remark}</div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -411,61 +425,64 @@ export default function ForecastPage() {
 
                                         {/* SECTION 2: FACTORI DE ASTAZI */}
                                         <div>
-                                            <h3 className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-2 px-1">Factori de astăzi care introduc riscuri</h3>
+                                            <h3 className="text-zinc-400 text-[10px] font-black uppercase tracking-widest mb-3 px-1">Factori din prezent care pot impacta drumetia ta viitoare</h3>
                                             <div className="grid grid-cols-2 gap-3">
                                                 {avalancheInfo && (
-                                                    <div className={`glass p-4 rounded-2xl flex flex-col justify-between h-36 text-white border transition-all ${avalancheInfo.uiLevel === 'red' ? 'bg-red-600/30 border-red-500/40' : avalancheInfo.uiLevel === 'yellow' ? 'bg-amber-600/30 border-amber-500/40' : 'bg-white/5 border-white/5'}`}>
-                                                        <div className="flex items-center space-x-2 opacity-60">
-                                                            <span className="material-symbols-outlined text-sm">report</span>
-                                                            <span className="text-[9px] font-bold uppercase tracking-widest">Avalansa</span>
+                                                    <div className={`bg-zinc-50/50 p-5 rounded-3xl flex flex-col justify-between h-40 border border-zinc-100 shadow-sm transition-all hover:bg-white hover:-translate-y-1 hover:shadow-md relative overflow-hidden group ${avalancheInfo.uiLevel === 'red' ? 'ring-1 ring-red-200 bg-red-50/50' : avalancheInfo.uiLevel === 'yellow' ? 'ring-1 ring-amber-200 bg-amber-50/50' : ''}`}>
+                                                        <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-6xl opacity-[0.03] -rotate-12 pointer-events-none group-hover:opacity-[0.06] transition-opacity">report</span>
+                                                        <div className="flex items-center space-x-2 relative z-10">
+                                                            <span className={`material-symbols-outlined text-sm ${avalancheInfo.uiLevel === 'red' ? 'text-red-500' : 'text-amber-500'}`}>report</span>
+                                                            <span className={`text-[9px] font-black uppercase tracking-widest ${avalancheInfo.uiLevel === 'red' ? 'text-red-600' : 'text-amber-600'}`}>Avalansa</span>
                                                         </div>
-                                                        <div className="text-3xl font-bold tracking-tighter">{avalancheInfo.level}/5</div>
-                                                        <div className="text-[10px] opacity-80 leading-tight font-medium italic">
+                                                        <div className={`text-3xl font-black tracking-tighter mt-1 relative z-10 ${avalancheInfo.uiLevel === 'red' ? 'text-red-600' : 'text-amber-600'}`}>{avalancheInfo.level}/5</div>
+                                                        <div className="text-[10px] text-zinc-500 leading-snug font-medium mt-auto relative z-10">
                                                             <div>{avalancheInfo.text}</div>
-                                                            {weather?.avalancheRisk?.updatedAt && <div className="mt-1 text-[8px] opacity-60">Raport citit la: {new Date(weather.avalancheRisk.updatedAt).toLocaleDateString('ro-RO')}</div>}
                                                         </div>
                                                     </div>
                                                 )}
                                                 {todayFactors.map(f => (
-                                                    <div key={f.id} className={`glass p-4 rounded-2xl flex flex-col justify-between h-36 text-white border transition-all ${f.level === 'red' ? 'bg-red-600/20 border-red-500/30' : f.level === 'yellow' ? 'bg-amber-600/20 border-amber-500/30' : 'bg-white/5 border-white/5'}`}>
-                                                        <div className="flex items-center space-x-2 opacity-60">
-                                                            <span className="material-symbols-outlined text-sm">{f.icon}</span>
-                                                            <span className="text-[9px] font-bold uppercase tracking-widest">{f.label.split(' (')[0]}</span>
+                                                    <div key={f.id} className={`bg-zinc-50/50 p-5 rounded-3xl flex flex-col justify-between h-40 border border-zinc-100 shadow-sm transition-all hover:bg-white hover:-translate-y-1 hover:shadow-md relative overflow-hidden group ${f.level === 'red' ? 'ring-1 ring-red-200 bg-red-50/50' : f.level === 'yellow' ? 'ring-1 ring-amber-200 bg-amber-50/50' : ''}`}>
+                                                        <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-6xl opacity-[0.03] -rotate-12 pointer-events-none group-hover:opacity-[0.06] transition-opacity">{f.icon}</span>
+                                                        <div className="flex items-center space-x-2 relative z-10">
+                                                            <span className={`material-symbols-outlined text-sm ${f.level === 'red' ? 'text-red-500' : f.level === 'yellow' ? 'text-amber-500' : 'text-alpine-emerald'}`}>{f.icon}</span>
+                                                            <span className={`text-[9px] font-black uppercase tracking-widest ${f.level === 'red' ? 'text-red-600' : f.level === 'yellow' ? 'text-amber-600' : 'text-alpine-emerald'}`}>{f.label.split(' (')[0]}</span>
                                                         </div>
-                                                        <div className="text-2xl font-bold tracking-tight">{f.value}</div>
-                                                        <div className="text-[10px] opacity-70 leading-tight line-clamp-2 font-medium italic">{f.remark}</div>
+                                                        <div className={`text-2xl font-black tracking-tight mt-1 relative z-10 ${f.level === 'red' ? 'text-red-600' : f.level === 'yellow' ? 'text-amber-600' : 'text-alpine-slate'}`}>{f.value}</div>
+                                                        <div className="text-[10px] text-zinc-500 leading-snug font-medium mt-auto relative z-10">{f.remark}</div>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
                                     </div>
                                 )}
-
                             </div>
                         </section>
 
                         {/* 🎒 EQUIPMENT */}
                         <section>
-                            <div className="glass bg-white/10 dark:bg-slate-900/40 border border-white/10 rounded-3xl overflow-hidden shadow-xl">
+                            <div className="bg-white border border-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-bento overflow-hidden mb-6">
                                 <button
                                     onClick={() => setShowEquipment(!showEquipment)}
-                                    className="w-full flex items-center justify-between p-6 text-white text-left group"
+                                    className="w-full flex items-center justify-between p-6 text-alpine-slate text-left group"
                                 >
                                     <div className="flex items-center space-x-3">
-                                        <span className="material-symbols-outlined opacity-60 group-hover:opacity-100 transition-opacity">backpack</span>
-                                        <span className="font-bold uppercase text-xs tracking-[0.2em]">Listă Echipament</span>
+                                        <span className="material-symbols-outlined text-zinc-400 group-hover:text-alpine-emerald transition-colors">backpack</span>
+                                        <span className="font-black uppercase text-xs tracking-[0.2em]">Listă Echipament</span>
                                     </div>
-                                    <span className="material-symbols-outlined opacity-60">
+                                    <span className="material-symbols-outlined text-zinc-400">
                                         {showEquipment ? 'expand_less' : 'expand_more'}
                                     </span>
                                 </button>
 
                                 {showEquipment && (
-                                    <div className="p-6 pt-0 text-white space-y-6 animate-in slide-in-from-top-2 fade-in duration-300">
-                                        <div className="flex justify-end">
+                                    <div className="p-6 pt-0 text-alpine-slate space-y-6 animate-in slide-in-from-top-2 fade-in duration-300">
+                                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                                            <p className="text-sm text-zinc-500 leading-relaxed max-w-md">
+                                                Într-o drumeție e nevoie să îți iei echipamentul de <strong className="text-alpine-slate font-bold">Drumeție Normală</strong>, la care se pot adăuga cele tehnice, în funcție de vreme: pentru zăpadă, ploaie, frig.
+                                            </p>
                                             <button
                                                 onClick={handleShare}
-                                                className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider transition-colors"
+                                                className="shrink-0 flex items-center space-x-2 px-4 py-2 bg-zinc-100 hover:bg-zinc-200 rounded-2xl text-xs font-bold uppercase tracking-wider transition-colors text-alpine-slate w-fit"
                                             >
                                                 <span className="material-symbols-outlined text-sm">ios_share</span>
                                                 <span>Share Listă</span>
@@ -475,23 +492,23 @@ export default function ForecastPage() {
                                         {/* RAIN GEAR */}
                                         {(weather?.maxPrecipHour || 0) > 0.1 && (
                                             <div className="space-y-3">
-                                                <div className="flex items-center gap-2 text-cyan-300">
+                                                <div className="flex items-center gap-2 text-sky-600">
                                                     <span className="material-symbols-outlined text-lg">rainy</span>
-                                                    <h3 className="text-xs font-bold uppercase tracking-widest">Pentru Ploaie</h3>
+                                                    <h3 className="text-xs font-black uppercase tracking-widest">Pentru Ploaie</h3>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-2">
                                                     {['Poncho/pelerina', 'Hardshell', 'Suprapantaloni', 'Bocanci impermeabili', 'Sapca/palarie', 'Șosete de schimb', 'Folie de supraviețuire', 'Frontala', 'Baterie externă'].map(item => (
-                                                        <label key={item} className="flex items-start gap-2 text-sm opacity-80 cursor-pointer group">
+                                                        <label key={item} className="flex items-start gap-2 text-sm text-zinc-600 cursor-pointer group">
                                                             <div className="relative flex items-center pt-0.5">
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={!!checkedItems[item]}
                                                                     onChange={() => toggleItem(item)}
-                                                                    className="peer appearance-none w-4 h-4 border border-white/30 rounded bg-white/5 checked:bg-cyan-500 checked:border-cyan-500 transition-colors"
+                                                                    className="peer appearance-none w-4 h-4 border border-zinc-300 rounded bg-zinc-50 checked:bg-sky-500 checked:border-sky-500 transition-colors"
                                                                 />
-                                                                <span className="material-symbols-outlined text-[10px] text-slate-900 absolute left-0.5 opacity-0 peer-checked:opacity-100 pointer-events-none">check</span>
+                                                                <span className="material-symbols-outlined text-[10px] text-white absolute left-0.5 opacity-0 peer-checked:opacity-100 pointer-events-none">check</span>
                                                             </div>
-                                                            <span className="group-hover:text-white transition-colors select-none">{item}</span>
+                                                            <span className="group-hover:text-alpine-slate transition-colors select-none">{item}</span>
                                                         </label>
                                                     ))}
                                                 </div>
@@ -500,24 +517,50 @@ export default function ForecastPage() {
 
                                         {/* WINTER GEAR */}
                                         {(season === 'Iarnă' || (weather?.snowDepth || 0) > 0) && (
-                                            <div className="space-y-3 pt-4 border-t border-white/10">
-                                                <div className="flex items-center gap-2 text-blue-200">
+                                            <div className="space-y-3 pt-4 border-t border-zinc-100">
+                                                <div className="flex items-center gap-2 text-sky-500">
                                                     <span className="material-symbols-outlined text-lg">ac_unit</span>
-                                                    <h3 className="text-xs font-bold uppercase tracking-widest">Pentru Zăpadă</h3>
+                                                    <h3 className="text-xs font-black uppercase tracking-widest">Pentru Zăpadă</h3>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-2">
-                                                    {['Parazapezi', 'Pantaloni softshell', 'Bocanci impermeabili', 'Polar', 'Gherute', 'Șosete de iarna (merinos)', 'Hardshell', 'Manusi (textile+imp.)', 'Caciula', 'Ochelari de soare'].map(item => (
-                                                        <label key={item} className="flex items-start gap-2 text-sm opacity-80 cursor-pointer group">
+                                                    {['Parazapezi', 'Pantaloni lungi', 'Bocanci impermeabili', 'Polar', 'Gherute', 'Șosete de iarna', 'Hardshell', 'Manusi (textile+imp.)', 'Caciula', 'Ochelari de soare'].map(item => (
+                                                        <label key={item} className="flex items-start gap-2 text-sm text-zinc-600 cursor-pointer group">
                                                             <div className="relative flex items-center pt-0.5">
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={!!checkedItems[item]}
                                                                     onChange={() => toggleItem(item)}
-                                                                    className="peer appearance-none w-4 h-4 border border-white/30 rounded bg-white/5 checked:bg-blue-400 checked:border-blue-400 transition-colors"
+                                                                    className="peer appearance-none w-4 h-4 border border-zinc-300 rounded bg-zinc-50 checked:bg-sky-400 checked:border-sky-400 transition-colors"
                                                                 />
-                                                                <span className="material-symbols-outlined text-[10px] text-slate-900 absolute left-0.5 opacity-0 peer-checked:opacity-100 pointer-events-none">check</span>
+                                                                <span className="material-symbols-outlined text-[10px] text-white absolute left-0.5 opacity-0 peer-checked:opacity-100 pointer-events-none">check</span>
                                                             </div>
-                                                            <span className="group-hover:text-white transition-colors select-none">{item}</span>
+                                                            <span className="group-hover:text-alpine-slate transition-colors select-none">{item}</span>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* WINTER TECHNICAL GEAR (+1800m) */}
+                                        {((season === 'Iarnă' || (weather?.snowDepth || 0) > 0) && altitude >= 1800) && (
+                                            <div className="space-y-3 pt-4 border-t border-zinc-100">
+                                                <div className="flex items-center gap-2 text-indigo-500">
+                                                    <span className="material-symbols-outlined text-lg">severe_cold</span>
+                                                    <h3 className="text-xs font-black uppercase tracking-widest">Pentru zăpadă +1800m si traseu tehnic</h3>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    {['Colțari', 'Piolet', 'Cască de alpinism', 'Kit Avalanșă', 'Bocanci de iarna', 'Ochelari de schi', 'Ham si coarda'].map(item => (
+                                                        <label key={item} className="flex items-start gap-2 text-sm text-zinc-600 cursor-pointer group">
+                                                            <div className="relative flex items-center pt-0.5">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={!!checkedItems[item]}
+                                                                    onChange={() => toggleItem(item)}
+                                                                    className="peer appearance-none w-4 h-4 border border-zinc-300 rounded bg-zinc-50 checked:bg-indigo-500 checked:border-indigo-500 transition-colors"
+                                                                />
+                                                                <span className="material-symbols-outlined text-[10px] text-white absolute left-0.5 opacity-0 peer-checked:opacity-100 pointer-events-none">check</span>
+                                                            </div>
+                                                            <span className="group-hover:text-alpine-slate transition-colors select-none">{item}</span>
                                                         </label>
                                                     ))}
                                                 </div>
@@ -525,24 +568,24 @@ export default function ForecastPage() {
                                         )}
 
                                         {/* NORMAL GEAR (ALWAYS SHOWN) */}
-                                        <div className="space-y-3 pt-4 border-t border-white/10">
-                                            <div className="flex items-center gap-2 text-emerald-300">
+                                        <div className="space-y-3 pt-4 border-t border-zinc-100">
+                                            <div className="flex items-center gap-2 text-alpine-emerald">
                                                 <span className="material-symbols-outlined text-lg">hiking</span>
-                                                <h3 className="text-xs font-bold uppercase tracking-widest">Drumeție Normală</h3>
+                                                <h3 className="text-xs font-black uppercase tracking-widest">Drumeție Normală</h3>
                                             </div>
                                             <div className="grid grid-cols-2 gap-2">
                                                 {['Bocanci de munte', 'Polar', 'Softshell', 'Pantaloni lungi', 'Tricou/bluza', 'Sosete', 'Trusa prim ajutor', 'Ochelari de soare', 'Frontala', 'Baterie externă', 'Mancare', 'Pijamale', 'Trusa igiena', 'Haine schimb'].map(item => (
-                                                    <label key={item} className="flex items-start gap-2 text-sm opacity-80 cursor-pointer group">
+                                                    <label key={item} className="flex items-start gap-2 text-sm text-zinc-600 cursor-pointer group">
                                                         <div className="relative flex items-center pt-0.5">
                                                             <input
                                                                 type="checkbox"
                                                                 checked={!!checkedItems[item]}
                                                                 onChange={() => toggleItem(item)}
-                                                                className="peer appearance-none w-4 h-4 border border-white/30 rounded bg-white/5 checked:bg-emerald-500 checked:border-emerald-500 transition-colors"
+                                                                className="peer appearance-none w-4 h-4 border border-zinc-300 rounded bg-zinc-50 checked:bg-alpine-emerald checked:border-alpine-emerald transition-colors"
                                                             />
-                                                            <span className="material-symbols-outlined text-[10px] text-slate-900 absolute left-0.5 opacity-0 peer-checked:opacity-100 pointer-events-none">check</span>
+                                                            <span className="material-symbols-outlined text-[10px] text-white absolute left-0.5 opacity-0 peer-checked:opacity-100 pointer-events-none">check</span>
                                                         </div>
-                                                        <span className="group-hover:text-white transition-colors select-none">{item}</span>
+                                                        <span className="group-hover:text-alpine-slate transition-colors select-none">{item}</span>
                                                     </label>
                                                 ))}
                                             </div>
@@ -554,37 +597,36 @@ export default function ForecastPage() {
 
                         {/* 🔗 LINKS (PLACEHOLDER) */}
                         <section>
-                            <button className="w-full glass bg-white/10 dark:bg-slate-900/40 border border-white/10 rounded-3xl flex items-center justify-between p-6 text-white group text-left">
+                            <button className="w-full bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-bento flex items-center justify-between p-6 text-alpine-slate group text-left transition-colors">
                                 <div className="flex items-center space-x-3">
-                                    <span className="material-symbols-outlined opacity-60 group-hover:opacity-100 transition-opacity">link</span>
-                                    <span className="font-bold uppercase text-xs tracking-[0.2em]">Linkuri Utile</span>
+                                    <span className="material-symbols-outlined text-zinc-400 group-hover:text-alpine-emerald transition-colors">link</span>
+                                    <span className="font-black uppercase text-xs tracking-[0.2em]">Linkuri Utile</span>
                                 </div>
-                                <span className="material-symbols-outlined opacity-60">expand_more</span>
+                                <span className="material-symbols-outlined text-zinc-400">expand_more</span>
+                            </button>
+                        </section>
+
+                        {/* 🐛 BUG REPORT */}
+                        <section className="mt-6 mb-6">
+                            <button 
+                                onClick={() => {
+                                    if ((window as any).Tally) {
+                                        (window as any).Tally.openPopup('WOpRxe', { layout: 'modal' });
+                                    }
+                                }}
+                                className="w-full bg-white hover:bg-rose-50 border border-rose-100 rounded-bento flex items-center justify-between p-6 text-rose-900 group text-left transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-md"
+                            >
+                                <div className="flex items-center space-x-3">
+                                    <span className="material-symbols-outlined text-rose-400 group-hover:text-rose-500 transition-colors">bug_report</span>
+                                    <span className="font-black uppercase text-xs tracking-[0.2em] mt-0.5">Ai găsit un bug? Spune-ne</span>
+                                </div>
+                                <span className="material-symbols-outlined text-rose-300 group-hover:text-rose-400">arrow_forward_ios</span>
                             </button>
                         </section>
                     </div>
                 )}
             </main>
 
-            {/* 🧭 NAVIGATION */}
-            <nav className="fixed bottom-0 left-0 right-0 z-50 p-6 flex justify-center">
-                <div className="glass bg-white/10 dark:bg-slate-900/60 border border-white/20 rounded-full px-8 py-3.5 flex items-center space-x-12 shadow-2xl shadow-black/40">
-                    <button className="text-white/40 hover:text-white transition-colors" title="Hărți">
-                        <span className="material-symbols-outlined text-[26px]">map</span>
-                    </button>
-                    <button
-                        onClick={() => navigate('/')}
-                        className="text-white transition-transform active:scale-90"
-                        title="Acasă"
-                    >
-                        <span className="material-symbols-outlined text-3xl">home</span>
-                    </button>
-                    <button className="text-white/40 hover:text-white transition-colors" title="Trasee">
-                        <span className="material-symbols-outlined text-[26px]">format_list_bulleted</span>
-                    </button>
-                </div>
-            </nav>
-            <div className="fixed bottom-3 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full z-[60]" />
         </div>
     );
 }

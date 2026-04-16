@@ -38,7 +38,7 @@ export interface WeatherData {
 
 
 const AVALANCHE_DATA_URL = 'https://raw.githubusercontent.com/SIG212/meteo-scraper/main/date_meteo.json';
-const ANM_DATA_URL = 'https://www.meteoromania.ro/wp-json/meteoapi/v2/starea-vremii';
+const ANM_DATA_URL = 'https://api.codetabs.com/v1/proxy/?quest=https://www.meteoromania.ro/wp-json/meteoapi/v2/starea-vremii';
 
 // Mapping for ANM Stations (High/Low altitude)
 const ANM_STATION_MAPPING: Record<string, { high: string, low: string }> = {

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap');
 @import "tailwindcss";
 
 @tailwind base;
@@ -16,17 +16,21 @@
 }
 
 @theme {
-  --font-jost: "Jost", sans-serif;
+  --font-sans: "Outfit", sans-serif;
+  --color-alpine-emerald: #059669;
+  --color-alpine-slate: #0f172a;
+  --color-alpine-orange: #f97316;
+  --radius-bento: 2.5rem;
 }
 
 :root {
-  font-family: var(--font-jost);
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #0f172a;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
