@@ -284,14 +284,7 @@ export default function ForecastPage() {
 
         <div className="min-h-screen relative font-sans text-alpine-slate bg-white overflow-x-hidden">
 
-            <div className="w-full flex items-center justify-between p-6 md:px-12 max-w-6xl mx-auto">
-                <a href="https://merglamunte.ro" className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 cursor-pointer hover:opacity-80 transition-opacity">
-                    merglamunte<span className="text-emerald-600">.ro</span>
-                </a>
-                <div className="hidden md:block text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-400">
-                    Tot ce ai nevoie ca sa mergi la munte.
-                </div>
-            </div>
+            <mlm-header></mlm-header>
 
             <div className="max-w-md md:max-w-xl mx-auto mb-6 px-4">
                 <div className="bg-amber-50/50 border border-amber-100 rounded-2xl p-4 flex items-start space-x-3 shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
@@ -626,7 +619,7 @@ export default function ForecastPage() {
                     </div>
                 )}
             </main>
-
+            <mlm-footer></mlm-footer>
         </div>
     );
 }

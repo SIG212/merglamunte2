@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #1e293b;
+  --foreground: #ffffff;
+}
+
+body {
+  font-family: 'Jost', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: linear-gradient(to bottom right, #1e293b, #334155, #1e293b);
+  color: var(--foreground);
+  min-height: 100vh;
+}
+
+/* iOS Weather frosted glass cards */
+.weather-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+}
+
+.weather-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Status bars */
+.status-bar-red {
+  background: #ef4444;
+}
+
+.status-bar-yellow {
+  background: #f59e0b;
+}
+
+.status-bar-green {
+  background: #10b981;
+}
+
+/* Status text colors */
+.status-text-red {
+  color: #fca5a5;
+}
+
+.status-text-yellow {
+  color: #fcd34d;
+}
+
+.status-text-green {
+  color: #86efac;
+}
+
+/* Severity colors */
+.severity-danger {
+  color: #fca5a5;
+}
+
+.severity-warning {
+  color: #fcd34d;
+}
+
+.severity-safe {
+  color: #86efac;
+}

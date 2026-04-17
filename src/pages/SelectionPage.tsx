@@ -26,14 +26,7 @@ export default function SelectionPage() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6 md:p-12 bg-white text-slate-900 font-sans">
             <div className="w-full max-w-2xl bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                <header className="mb-10 flex w-full items-center justify-between">
-                    <a href="https://merglamunte.ro" className="text-3xl font-black tracking-tight text-slate-900 cursor-pointer hover:opacity-80 transition-opacity">
-                        merglamunte<span className="text-emerald-600">.ro</span>
-                    </a>
-                    <div className="hidden md:block text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-400">
-                       Tot ce ai nevoie ca sa mergi la munte.
-                    </div>
-                </header>
+                <mlm-header></mlm-header>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
                     {/* Mountain Selection */}
@@ -98,6 +91,7 @@ export default function SelectionPage() {
                     </button>
                 </form>
             </div>
+            <mlm-footer></mlm-footer>
         </div>
     );
 }
